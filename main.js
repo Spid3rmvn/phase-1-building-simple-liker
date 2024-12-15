@@ -1,15 +1,47 @@
 // Defining text characters for the empty and full hearts for you to use later.
 const EMPTY_HEART = '♡'
 const FULL_HEART = '♥'
+// Add event listener to empty hearts
+const emptyHearts = document.querySelectorAll('.like-glyph');
+emptyHearts.forEach(heart => {
+  heart.addEventListener('click', () => {
+    // Invoke mimicServerCall to simulate making a server request
+    mimicServerCall()
+      .then(() => {
+        // Change the heart to a full heart
+        heart.textContent = FULL_HEART;
+        // Add the .activated-heart class to make the heart appear red
+        heart.classList.add('activated-heart');
+      })
+      .catch(error => {
+        // Display the error modal by removing the .hidden class
+        const modal = document.getElementById('modal');
+        modal.classList.remove('hidden');
+        // Display the server error message in the modal
+        const modalMessage = document.getElementById('modal-message');
+        modalMessage.textContent = error;
+        // Use setTimeout to hide the modal after 3 seconds (add the .hidden class)
+        setTimeout(() => {
+          modal.classList.add('hidden');
+        }, 3000);
+      });
+  });
+});
 
-// Your JavaScript code goes here!
+// Add event listener to full hearts
+const fullHearts = document.querySelectorAll('.activated-heart');
+fullHearts.forEach(heart => {
+  heart.addEventListener('click', () => {
+    // Change the heart back to an empty heart
+    heart.textContent = EMPTY_HEART;
+    // Remove the .activated-heart class
+    heart.classList.remove('activated-heart');
+  });
+});
 
-
-
-
-//------------------------------------------------------------------------------
-// Don't change the code below: this function mocks the server response
-//------------------------------------------------------------------------------
+// Add the .hidden class to the error modal in the HTML so it does not appear when the page first loads
+const modal = document.getElementById('modal');
+modal.classList.add('hidden');
 
 function mimicServerCall(url="http://mimicServer.example.com", config={}) {
   return new Promise(function(resolve, reject) {
